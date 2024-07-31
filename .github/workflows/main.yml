@@ -30,10 +30,10 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                   SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
               with:
-                  projectBaseDir: src/
                   args: >
                       -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION}}
                       -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY}}
+                      -Dsonar.sources=src/
                       -Dsonar.junit.reportPaths=target/surefire-reports/
                       -Dsonar.jacoco.reportPaths=target/jacoco.exec
                       -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
