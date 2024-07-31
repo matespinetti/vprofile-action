@@ -28,12 +28,20 @@ jobs:
               uses: warchant/setup-sonar-scanner@v7
 
             - name: Run SonarQube scan
+              env:
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                  SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
+                  SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+                  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+                  AWS_REGION: us-east-2
+                  ECR_REPOSITORY: vprofileapp
+                  EKS_CLUSTER: vprofile-eks
               run: |
                   sonar-scanner \
-                    -Dsonar.host.url=${{ secrets.SONAR_URL }} \
-                    -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-                    -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-                    -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+                    -Dsonar.host.url=${SONAR_HOST_URL} \
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.organization=${SONAR_ORGANIZATION} \
+                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                     -Dsonar.sources=src/ \
                     -Dsonar.junit.reportsPath=target/surefire-reports/ \
                     -Dsonar.jacoco.reportsPath=target/jacoco.exec \
