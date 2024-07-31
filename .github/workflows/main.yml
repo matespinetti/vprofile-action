@@ -24,20 +24,22 @@ jobs:
                   java-version: "11"
 
             ###Setup SonarCloud
-            - name: SonarCloud scan
-              uses: sonarsource/sonarqube-scan-action@v2.3.0
-              env:
-                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                  SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-              with:
-                  args: >
-                      -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION}}
-                      -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY}}
-                      -Dsonar.sources=src/
-                      -Dsonar.junit.reportPaths=target/surefire-reports/
-                      -Dsonar.jacoco.reportPaths=target/jacoco.exec
-                      -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
-                      -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/
+            # Setup sonar-scanner
+            - name: Setup SonarQube
+              uses: warchant/setup-sonar-scanner@v7
+
+            # Run sonar-scanner
+            - name: SonarQube Scan
+              run: sonar-scanner \
+                  -Dsonar.host.url=${{ secrets.SONAR_URL }} \
+                  -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+                  -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+                  -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+                  -Dsonar.sources=src/ \
+                  -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                  -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                  -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml \
+                  -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
 
             - name: SonarQube Quality Gate check
               id: sonarqube-quality-gate-check
